@@ -1,0 +1,44 @@
+---
+import { getCollection } from "astro:content";
+import { render } from "astro:content";
+import LeafLayout from "@/layouts/LeafLayout.astro";
+import { SITE } from "@/lib/site";
+import { breadcrumbListSchema } from "@/lib/schema";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("industries");
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props as { entry: Awaited<ReturnType<typeof getCollection>>[number] };
+const { Content } = await render(entry);
+
+const canonical = new URL(Astro.url.pathname, SITE.url).toString();
+const crumbs = [
+  { name: "Home", href: "/" },
+  { name: "Industries", href: "/industry" },
+  { name: entry.data.title, href: `/industry/${entry.slug}` },
+];
+const jsonLd = [
+  breadcrumbListSchema(
+    crumbs.map((c) => ({ name: c.name, item: new URL(c.href, SITE.url).toString() })),
+  ),
+];
+---
+
+<LeafLayout
+  kind="industry"
+  slug={entry.slug}
+  title={entry.data.title}
+  description={entry.data.description}
+  canonical={canonical}
+  heroSummary={entry.data.heroSummary}
+  crumbs={crumbs}
+  jsonLd={jsonLd}
+  linkBlocks={entry.data.linkBlocks}
+>
+  <Content />
+</LeafLayout>

@@ -1,0 +1,50 @@
+---
+import { getCollection } from "astro:content";
+import { render } from "astro:content";
+import LeafLayout from "@/layouts/LeafLayout.astro";
+import { SITE, SERVICE_AREA } from "@/lib/site";
+import { breadcrumbListSchema, locationLocalBusinessSchema } from "@/lib/schema";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("locations");
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props as { entry: Awaited<ReturnType<typeof getCollection>>[number] };
+const { Content } = await render(entry);
+
+const canonical = new URL(Astro.url.pathname, SITE.url).toString();
+const crumbs = [
+  { name: "Home", href: "/" },
+  { name: "Locations", href: "/location" },
+  { name: entry.data.title, href: `/location/${entry.slug}` },
+];
+const jsonLd = [
+  breadcrumbListSchema(
+    crumbs.map((c) => ({ name: c.name, item: new URL(c.href, SITE.url).toString() })),
+  ),
+  locationLocalBusinessSchema({
+    name: `${SITE.name} - ${entry.data.title}`,
+    pageUrl: canonical,
+    description: entry.data.description,
+    areaServedText: SERVICE_AREA.join(", "),
+  }),
+];
+---
+
+<LeafLayout
+  kind="location"
+  slug={entry.slug}
+  title={entry.data.title}
+  description={entry.data.description}
+  canonical={canonical}
+  heroSummary={entry.data.heroSummary}
+  crumbs={crumbs}
+  jsonLd={jsonLd}
+  linkBlocks={entry.data.linkBlocks}
+>
+  <Content />
+</LeafLayout>

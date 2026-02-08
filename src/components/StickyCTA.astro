@@ -1,0 +1,13 @@
+---
+const label = (Astro.props as { label?: string }).label || "Book a Call";
+---
+
+<div class="pointer-events-none fixed bottom-4 right-4 z-50">
+  <a
+    href="/contact#lead-form"
+    class="pointer-events-auto focus-ring inline-flex items-center justify-center rounded-full bg-brand-accent px-5 py-3 text-sm font-semibold text-brand-primary shadow-soft hover:brightness-95"
+  >
+    {label}
+  </a>
+</div>
+

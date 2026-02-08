@@ -1,0 +1,301 @@
+---
+import { getCollection } from "astro:content";
+
+const locations = (await getCollection("locations")).sort((a, b) => a.data.title.localeCompare(b.data.title));
+const industries = (await getCollection("industries")).sort((a, b) => a.data.title.localeCompare(b.data.title));
+const services = (await getCollection("services")).sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const id = (Astro.props as { id?: string }).id || "lead-form";
+---
+
+<section id={id} class="rounded-2xl border border-brand-border bg-white p-8 shadow-soft">
+  <h2 class="text-2xl font-semibold text-brand-primary">Request IT support</h2>
+  <p class="mt-2 text-sm text-brand-text/80">
+    Share enough detail for a useful first call. You can keep it high level.
+  </p>
+
+  <form
+    class="mt-6"
+    method="post"
+    action="/api/lead"
+    novalidate
+    data-lead-form
+  >
+    <div class="hidden" aria-hidden="true">
+      <label for="website">Website</label>
+      <input id="website" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+    <div class="flex items-center justify-between gap-4">
+      <p class="text-xs font-semibold text-brand-text/70">
+        Step <span data-step-current>1</span> of <span data-step-total>3</span>
+      </p>
+      <div class="h-2 w-40 overflow-hidden rounded-full border border-brand-border bg-white">
+        <div data-step-bar class="h-full w-1/3 bg-brand-accent transition-all"></div>
+      </div>
+    </div>
+
+    <div class="mt-6 space-y-8">
+      <fieldset class="space-y-4" data-step="1">
+        <legend class="text-sm font-semibold text-brand-primary">Basics</legend>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label class="text-sm font-medium" for="name">Name</label>
+            <input
+              class="focus-ring mt-1 w-full rounded-xl border border-brand-border px-4 py-3 text-sm"
+              id="name"
+              name="name"
+              autocomplete="name"
+              required
+            />
+          </div>
+          <div>
+            <label class="text-sm font-medium" for="company">Company</label>
+            <input
+              class="focus-ring mt-1 w-full rounded-xl border border-brand-border px-4 py-3 text-sm"
+              id="company"
+              name="company"
+              autocomplete="organization"
+              required
+            />
+          </div>
+          <div>
+            <label class="text-sm font-medium" for="email">Email</label>
+            <input
+              class="focus-ring mt-1 w-full rounded-xl border border-brand-border px-4 py-3 text-sm"
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+            />
+          </div>
+          <div>
+            <label class="text-sm font-medium" for="phone">Phone</label>
+            <input
+              class="focus-ring mt-1 w-full rounded-xl border border-brand-border px-4 py-3 text-sm"
+              id="phone"
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              required
+            />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="space-y-4" data-step="2">
+        <legend class="text-sm font-semibold text-brand-primary">Context</legend>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label class="text-sm font-medium" for="location">Location</label>
+            <select
+              class="focus-ring mt-1 w-full rounded-xl border border-brand-border px-4 py-3 text-sm"
+              id="location"
+              name="location"
+              required
+            >
+              <option value="">Select a location</option>
+              {locations.map((l) => (
+                <option value={l.data.title}>{l.data.title}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label class="text-sm font-medium" for="industry">Industry</label>
+            <select
+              class="focus-ring mt-1 w-full rounded-xl border border-brand-border px-4 py-3 text-sm"
+              id="industry"
+              name="industry"
+              required
+            >
+              <option value="">Select an industry</option>
+              {industries.map((i) => (
+                <option value={i.data.title}>{i.data.title}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-sm font-medium">Services needed</p>
+          <div class="mt-2 grid gap-2 sm:grid-cols-2">
+            {services.map((s) => (
+              <label class="flex items-start gap-3 rounded-xl border border-brand-border p-3 text-sm">
+                <input
+                  class="mt-1"
+                  type="checkbox"
+                  name="servicesNeeded"
+                  value={s.data.title}
+                />
+                <span>
+                  <span class="font-semibold text-brand-primary">{s.data.title}</span>
+                  <span class="mt-1 block text-xs text-brand-text/70">{s.data.description}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+          <p class="mt-3 text-xs text-brand-text/70">
+            If you do not see a match, select the closest option and add details in the message.
+          </p>
+        </div>
+      </fieldset>
+
+      <fieldset class="space-y-4" data-step="3">
+        <legend class="text-sm font-semibold text-brand-primary">Priority and details</legend>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label class="text-sm font-medium" for="urgency">Urgency</label>
+            <select
+              class="focus-ring mt-1 w-full rounded-xl border border-brand-border px-4 py-3 text-sm"
+              id="urgency"
+              name="urgency"
+              required
+            >
+              <option value="">Select urgency</option>
+              <option value="today">Today</option>
+              <option value="this-week">This week</option>
+              <option value="this-month">This month</option>
+              <option value="planning">Planning</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-sm font-medium" for="preferredContact">Preferred contact</label>
+            <select
+              class="focus-ring mt-1 w-full rounded-xl border border-brand-border px-4 py-3 text-sm"
+              id="preferredContact"
+              name="preferredContact"
+            >
+              <option value="email">Email</option>
+              <option value="phone">Phone</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium" for="message">Message</label>
+          <textarea
+            class="focus-ring mt-1 w-full rounded-xl border border-brand-border px-4 py-3 text-sm"
+            id="message"
+            name="message"
+            rows={6}
+            placeholder="Example: New office setup, Microsoft 365 issues, phishing attempts, or help desk backlog."
+          ></textarea>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+      <p class="text-sm text-brand-text/80" role="status" aria-live="polite" data-step-status></p>
+      <div class="flex gap-3">
+        <button
+          type="button"
+          class="focus-ring rounded-full border border-brand-border px-5 py-3 text-sm font-semibold text-brand-primary hover:bg-brand-primary hover:text-white"
+          data-prev
+        >
+          Back
+        </button>
+        <button
+          type="button"
+          class="focus-ring rounded-full bg-brand-accent px-5 py-3 text-sm font-semibold text-brand-primary hover:brightness-95"
+          data-next
+        >
+          Next
+        </button>
+        <button
+          type="submit"
+          class="focus-ring hidden rounded-full bg-brand-primary px-5 py-3 text-sm font-semibold text-white hover:brightness-95"
+          data-submit
+        >
+          Send request
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <script type="module" is:inline>
+    const form = document.querySelector("[data-lead-form]");
+    if (!form) return;
+
+    const steps = Array.from(form.querySelectorAll("[data-step]"));
+    const btnPrev = form.querySelector("[data-prev]");
+    const btnNext = form.querySelector("[data-next]");
+    const btnSubmit = form.querySelector("[data-submit]");
+    const status = form.querySelector("[data-step-status]");
+    const stepCurrent = form.querySelector("[data-step-current]");
+    const stepTotal = form.querySelector("[data-step-total]");
+    const bar = form.querySelector("[data-step-bar]");
+
+    let idx = 0;
+    const total = steps.length;
+    stepTotal.textContent = String(total);
+
+    document.documentElement.classList.add("js-enabled");
+
+    function setStatus(msg) {
+      if (status) status.textContent = msg || "";
+    }
+
+    function show() {
+      steps.forEach((fs, i) => {
+        fs.style.display = i === idx ? "" : "none";
+      });
+      if (stepCurrent) stepCurrent.textContent = String(idx + 1);
+      if (bar) bar.style.width = `${Math.round(((idx + 1) / total) * 100)}%`;
+      btnPrev.disabled = idx === 0;
+      btnNext.style.display = idx < total - 1 ? "" : "none";
+      btnSubmit.classList.toggle("hidden", idx !== total - 1);
+      setStatus("");
+      const first = steps[idx].querySelector("input,select,textarea");
+      if (first) first.focus();
+    }
+
+    function validateStep() {
+      const inputs = Array.from(steps[idx].querySelectorAll("input,select,textarea"));
+      let ok = true;
+      for (const el of inputs) {
+        if (el.hasAttribute("required") && !el.value) ok = false;
+        if (el.getAttribute("type") === "email" && el.value && !el.value.includes("@")) ok = false;
+      }
+      if (!ok) setStatus("Please complete required fields before continuing.");
+      return ok;
+    }
+
+    btnPrev?.addEventListener("click", () => {
+      if (idx > 0) idx -= 1;
+      show();
+    });
+    btnNext?.addEventListener("click", () => {
+      if (!validateStep()) return;
+      if (idx < total - 1) idx += 1;
+      show();
+    });
+
+    show();
+
+    form.addEventListener("submit", async (e) => {
+      if (!validateStep()) {
+        e.preventDefault();
+        return;
+      }
+      if (!window.fetch) return;
+      e.preventDefault();
+      setStatus("Sending...");
+
+      const fd = new FormData(form);
+      const payload = Object.fromEntries(fd.entries());
+      const servicesNeeded = fd.getAll("servicesNeeded");
+
+      const res = await fetch(form.action, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ ...payload, servicesNeeded }),
+      });
+
+      if (!res.ok) {
+        setStatus("Something did not go through. Please try again or refresh the page.");
+        return;
+      }
+      window.location.href = "/contact?submitted=1#lead-form";
+    });
+  </script>
+</section>

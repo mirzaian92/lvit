@@ -1,0 +1,70 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import TrustSignals from "@/components/TrustSignals.astro";
+import { SITE } from "@/lib/site";
+import { breadcrumbListSchema } from "@/lib/schema";
+
+const industries = await getCollection("industries");
+const canonical = new URL(Astro.url.pathname, SITE.url).toString();
+const jsonLd = [
+  breadcrumbListSchema([
+    { name: "Home", item: new URL("/", SITE.url).toString() },
+    { name: "Industries", item: canonical },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Industries We Support Across Las Vegas"
+  description="Explore industry-specific IT support and cybersecurity guidance for Las Vegas-area organizations, covering workflows, systems, risks, and compliance where it applies."
+  canonical={canonical}
+  jsonLd={jsonLd}
+>
+  <div class="space-y-10">
+    <section class="rounded-2xl border border-brand-border bg-white p-10 shadow-soft">
+      <h1 class="text-4xl font-semibold tracking-tight text-brand-primary sm:text-5xl">Industries</h1>
+      <p class="mt-4 max-w-3xl text-base leading-relaxed text-brand-text/85">
+        The right MSP plan depends on what you do and how you do it. These pages focus on real tooling,
+        workflows, and risk patterns commonly seen in Las Vegas-area operations.
+      </p>
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a
+          class="focus-ring rounded-full bg-brand-primary px-6 py-3 text-sm font-semibold text-white hover:brightness-95"
+          href="/contact#lead-form"
+        >
+          Talk to an engineer
+        </a>
+        <a
+          class="focus-ring rounded-full border border-brand-border px-6 py-3 text-sm font-semibold text-brand-primary hover:bg-brand-primary hover:text-white"
+          href="/service"
+        >
+          View services
+        </a>
+      </div>
+    </section>
+
+    <TrustSignals />
+
+    <section class="rounded-2xl border border-brand-border bg-white p-8">
+      <h2 class="text-2xl font-semibold text-brand-primary">All industries</h2>
+      <p class="mt-3 text-sm text-brand-text/80">
+        Each industry page links directly to the services and locations that tend to matter most.
+      </p>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {industries
+          .sort((a, b) => a.data.title.localeCompare(b.data.title))
+          .map((i) => (
+            <a
+              class="focus-ring rounded-2xl border border-brand-border bg-white p-6 shadow-sm hover:border-brand-accent"
+              href={`/industry/${i.slug}`}
+            >
+              <p class="text-lg font-semibold text-brand-primary">{i.data.title}</p>
+              <p class="mt-2 text-sm text-brand-text/80">{i.data.description}</p>
+              <p class="mt-4 text-sm font-semibold text-brand-primary">IT for {i.data.title}</p>
+            </a>
+          ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

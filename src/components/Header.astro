@@ -1,0 +1,33 @@
+---
+import { SITE } from "@/lib/site";
+---
+
+<header class="sticky top-0 z-40 border-b border-brand-border bg-white/90 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+    <a href="/" class="focus-ring flex items-center gap-2 rounded-md">
+      <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand-primary">
+        <span class="text-sm font-bold text-white">SS</span>
+      </span>
+      <span class="font-semibold text-brand-primary">{SITE.name}</span>
+    </a>
+    <nav aria-label="Primary" class="hidden items-center gap-6 md:flex">
+      <a class="focus-ring rounded-sm text-sm hover:text-brand-primary" href="/service">Services</a>
+      <a class="focus-ring rounded-sm text-sm hover:text-brand-primary" href="/industry">Industries</a>
+      <a class="focus-ring rounded-sm text-sm hover:text-brand-primary" href="/location">Locations</a>
+      <a class="focus-ring rounded-sm text-sm hover:text-brand-primary" href="/about">About</a>
+      <a
+        class="focus-ring rounded-full bg-brand-primary px-4 py-2 text-sm font-semibold text-white hover:brightness-95"
+        href="/contact"
+      >
+        Contact
+      </a>
+    </nav>
+    <a
+      class="focus-ring rounded-full border border-brand-border px-4 py-2 text-sm font-semibold text-brand-primary hover:bg-brand-primary hover:text-white md:hidden"
+      href="/contact"
+    >
+      Contact
+    </a>
+  </div>
+</header>
+

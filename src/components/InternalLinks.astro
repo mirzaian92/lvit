@@ -1,0 +1,75 @@
+---
+import { getRelations, type RelationKind } from "@/lib/relations";
+import { industryHref, locationHref, serviceHref } from "@/lib/paths";
+import { getCollection } from "astro:content";
+
+type Props = {
+  kind: RelationKind;
+  slug: string;
+  title?: string;
+};
+
+const { kind, slug, title } = Astro.props as Props;
+const rel = getRelations(kind, slug);
+
+const serviceEntries = await getCollection("services");
+const industryEntries = await getCollection("industries");
+const locationEntries = await getCollection("locations");
+
+const serviceTitleBySlug = new Map(serviceEntries.map((e) => [e.slug, e.data.title]));
+const industryTitleBySlug = new Map(industryEntries.map((e) => [e.slug, e.data.title]));
+const locationTitleBySlug = new Map(locationEntries.map((e) => [e.slug, e.data.title]));
+
+function href(group: "services" | "industries" | "locations" | "nearbyLocations", s: string) {
+  if (group === "services") return serviceHref(s);
+  if (group === "industries") return industryHref(s);
+  return locationHref(s);
+}
+
+function labelFromSlug(s: string) {
+  return (
+    serviceTitleBySlug.get(s) ||
+    industryTitleBySlug.get(s) ||
+    locationTitleBySlug.get(s) ||
+    s.replace(/-it-services$/, "").replace(/-/g, " ").replace(/\b\w/g, (m) => m.toUpperCase())
+  );
+}
+
+function heading(group: "services" | "industries" | "locations" | "nearbyLocations") {
+  if (group === "services") return "Related IT services";
+  if (group === "industries") return "Industries we support";
+  if (group === "nearbyLocations") return "Nearby coverage";
+  return "Service locations";
+}
+
+const groups: Array<["services" | "industries" | "locations" | "nearbyLocations", string[]]> = [];
+if (rel?.services?.length) groups.push(["services", rel.services]);
+if (rel?.industries?.length) groups.push(["industries", rel.industries]);
+if (kind === "location" && rel?.nearbyLocations?.length) groups.push(["nearbyLocations", rel.nearbyLocations]);
+if (kind !== "location" && rel?.locations?.length) groups.push(["locations", rel.locations]);
+---
+
+{groups.length ? (
+  <aside class="rounded-2xl border border-brand-border bg-white p-6">
+    <p class="text-sm font-semibold text-brand-primary">{title || "Explore next"}</p>
+    <div class="mt-4 grid gap-6 lg:grid-cols-2">
+      {groups.map(([group, items]) => (
+        <section>
+          <h2 class="text-base font-semibold text-brand-primary">{heading(group)}</h2>
+          <ul class="mt-3 grid gap-2 sm:grid-cols-2">
+            {items.map((s) => (
+              <li>
+                <a
+                  class="focus-ring block rounded-xl border border-brand-border px-4 py-3 text-sm font-medium text-brand-primary hover:bg-brand-primary hover:text-white"
+                  href={href(group, s)}
+                >
+                  {labelFromSlug(s)}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </aside>
+) : null}

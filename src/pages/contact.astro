@@ -1,0 +1,99 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import LeadForm from "@/components/LeadForm.astro";
+import { SITE, SERVICE_AREA } from "@/lib/site";
+import { breadcrumbListSchema, professionalServiceSchema } from "@/lib/schema";
+
+const canonical = new URL(Astro.url.pathname, SITE.url).toString();
+const submitted = Astro.url.searchParams.get("submitted") === "1";
+
+const jsonLd = [
+  breadcrumbListSchema([
+    { name: "Home", item: new URL("/", SITE.url).toString() },
+    { name: "Contact", item: canonical },
+  ]),
+  professionalServiceSchema({
+    name: SITE.name,
+    pageUrl: canonical,
+    areaServed: SERVICE_AREA,
+    description:
+      "Managed IT services and cybersecurity support for Las Vegas-area businesses, including onsite assistance when needed.",
+  }),
+];
+---
+
+<BaseLayout
+  title="Contact a Las Vegas MSP"
+  description="Request managed IT services, cybersecurity help, Microsoft 365 support, or onsite IT assistance across Las Vegas and surrounding areas. Business hours: 24 hours."
+  canonical={canonical}
+  jsonLd={jsonLd}
+>
+  <div class="grid gap-10 lg:grid-cols-12">
+    <section class="lg:col-span-5">
+      <div class="rounded-2xl border border-brand-border bg-white p-8 shadow-soft">
+        <h1 class="text-3xl font-semibold tracking-tight text-brand-primary sm:text-4xl">Contact</h1>
+        <p class="mt-4 text-sm text-brand-text/80">
+          Use the form to request support or a discovery call. We prioritize clarity: what changed, what
+          is impacted, and what success looks like.
+        </p>
+
+        <div class="mt-6 rounded-2xl border border-brand-border p-6">
+          <p class="text-sm font-semibold text-brand-primary">Hours</p>
+          <p class="mt-1 text-sm text-brand-text/80">{SITE.hours}</p>
+          <p class="mt-4 text-sm font-semibold text-brand-primary">Service area</p>
+          <p class="mt-1 text-sm text-brand-text/80">
+            Las Vegas, Henderson, North Las Vegas, Summerlin, and nearby communities.
+          </p>
+          {SITE.email ? (
+            <>
+              <p class="mt-4 text-sm font-semibold text-brand-primary">Email</p>
+              <a class="focus-ring mt-1 inline-block rounded-sm text-sm text-brand-primary hover:underline" href={`mailto:${SITE.email}`}>
+                {SITE.email}
+              </a>
+            </>
+          ) : (
+            <p class="mt-4 text-xs text-brand-text/70">
+              Set <code class="rounded bg-brand-border/40 px-1">PUBLIC_CONTACT_EMAIL</code> to show an email address here.
+            </p>
+          )}
+        </div>
+
+        {submitted ? (
+          <div class="mt-6 rounded-2xl border border-brand-border bg-white p-6">
+            <p class="text-sm font-semibold text-brand-primary">Request received</p>
+            <p class="mt-2 text-sm text-brand-text/80">
+              Thanks. If it helps, explore the most common next steps while you wait.
+            </p>
+            <ul class="mt-4 space-y-2 text-sm">
+              <li>
+                <a class="focus-ring rounded-sm hover:text-brand-primary" href="/service/cybersecurity">
+                  Cybersecurity controls that reduce local risk quickly
+                </a>
+              </li>
+              <li>
+                <a class="focus-ring rounded-sm hover:text-brand-primary" href="/service/managed-it-services">
+                  Managed IT services for day-to-day ownership
+                </a>
+              </li>
+              <li>
+                <a class="focus-ring rounded-sm hover:text-brand-primary" href="/location/las-vegas-it-services">
+                  Las Vegas onsite IT coverage details
+                </a>
+              </li>
+              <li>
+                <a class="focus-ring rounded-sm hover:text-brand-primary" href="/industry/professional-services">
+                  IT patterns for professional services in the valley
+                </a>
+              </li>
+            </ul>
+          </div>
+        ) : null}
+      </div>
+    </section>
+
+    <section class="lg:col-span-7">
+      <LeadForm id="lead-form" />
+    </section>
+  </div>
+</BaseLayout>
+

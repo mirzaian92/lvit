@@ -1,0 +1,69 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { SITE } from "@/lib/site";
+import { breadcrumbListSchema } from "@/lib/schema";
+
+const locations = await getCollection("locations");
+const canonical = new URL(Astro.url.pathname, SITE.url).toString();
+const jsonLd = [
+  breadcrumbListSchema([
+    { name: "Home", item: new URL("/", SITE.url).toString() },
+    { name: "Locations", item: canonical },
+  ]),
+];
+---
+
+<BaseLayout
+  title="Las Vegas Area IT Services Coverage"
+  description="Local MSP coverage across Las Vegas and nearby communities. Each location page includes onsite planning details, common issues, and FAQs specific to that area."
+  canonical={canonical}
+  jsonLd={jsonLd}
+>
+  <div class="space-y-10">
+    <section class="rounded-2xl border border-brand-border bg-white p-10 shadow-soft">
+      <h1 class="text-4xl font-semibold tracking-tight text-brand-primary sm:text-5xl">Locations</h1>
+      <p class="mt-4 max-w-3xl text-base leading-relaxed text-brand-text/85">
+        Onsite support is not just distance. It is access, parking, building rules, after-hours entry,
+        and how fast we can get eyes on a device when remote fixes are not enough. Each page explains
+        how we plan coverage for that area.
+      </p>
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a
+          class="focus-ring rounded-full bg-brand-primary px-6 py-3 text-sm font-semibold text-white hover:brightness-95"
+          href="/contact#lead-form"
+        >
+          Request coverage
+        </a>
+        <a
+          class="focus-ring rounded-full border border-brand-border px-6 py-3 text-sm font-semibold text-brand-primary hover:bg-brand-primary hover:text-white"
+          href="/service"
+        >
+          View services
+        </a>
+      </div>
+    </section>
+
+    <section class="rounded-2xl border border-brand-border bg-white p-8">
+      <h2 class="text-2xl font-semibold text-brand-primary">All service areas</h2>
+      <p class="mt-3 text-sm text-brand-text/80">
+        Location pages are intentionally not templated. They include streets, highways, landmarks, and
+        what we see most often in that area.
+      </p>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {locations
+          .sort((a, b) => a.data.title.localeCompare(b.data.title))
+          .map((l) => (
+            <a
+              class="focus-ring rounded-2xl border border-brand-border bg-white p-6 shadow-sm hover:border-brand-accent"
+              href={`/location/${l.slug}`}
+            >
+              <p class="text-lg font-semibold text-brand-primary">{l.data.title}</p>
+              <p class="mt-2 text-sm text-brand-text/80">{l.data.description}</p>
+              <p class="mt-4 text-sm font-semibold text-brand-primary">IT services in {l.data.title}</p>
+            </a>
+          ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

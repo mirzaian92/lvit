@@ -1,0 +1,63 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
+import InternalLinks from "@/components/InternalLinks.astro";
+import type { RelationKind } from "@/lib/relations";
+
+type Crumb = { name: string; href: string };
+type Props = {
+  kind: RelationKind;
+  slug: string;
+  title: string;
+  description: string;
+  canonical: string;
+  heroSummary: string;
+  crumbs: Crumb[];
+  jsonLd?: unknown[];
+  linkBlocks?: { top?: boolean; mid?: boolean; bottom?: boolean };
+};
+
+const { kind, slug, title, description, canonical, heroSummary, crumbs, jsonLd, linkBlocks } =
+  Astro.props as Props;
+
+const hub =
+  kind === "service"
+    ? { href: "/service", label: "View all services" }
+    : kind === "industry"
+      ? { href: "/industry", label: "View all industries" }
+      : { href: "/location", label: "View all locations" };
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} jsonLd={jsonLd}>
+  <div class="space-y-8">
+    <Breadcrumbs items={crumbs} />
+
+    <section class="rounded-2xl border border-brand-border bg-white p-8 shadow-soft">
+      <h1 class="text-3xl font-semibold tracking-tight text-brand-primary sm:text-4xl">{title}</h1>
+      <p class="mt-4 max-w-3xl text-base leading-relaxed text-brand-text/85">{heroSummary}</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a
+          class="focus-ring rounded-full bg-brand-primary px-5 py-3 text-sm font-semibold text-white hover:brightness-95"
+          href="/contact#lead-form"
+        >
+          Request IT help
+        </a>
+        <a
+          class="focus-ring rounded-full border border-brand-border px-5 py-3 text-sm font-semibold text-brand-primary hover:bg-brand-primary hover:text-white"
+          href={hub.href}
+        >
+          {hub.label}
+        </a>
+      </div>
+    </section>
+
+    {linkBlocks?.top ? <InternalLinks kind={kind} slug={slug} title="Recommended next steps" /> : null}
+
+    <article class="prose prose-slate max-w-none prose-a:font-medium prose-headings:text-brand-primary">
+      <slot />
+    </article>
+
+    {linkBlocks?.mid ? <InternalLinks kind={kind} slug={slug} title="More paths to explore" /> : null}
+    {linkBlocks?.bottom ? <InternalLinks kind={kind} slug={slug} title="Keep exploring" /> : null}
+  </div>
+</BaseLayout>

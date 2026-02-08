@@ -1,0 +1,13 @@
+---
+import { organizationSchema, websiteSchema } from "@/lib/schema";
+const org = organizationSchema();
+const site = websiteSchema();
+---
+
+<script type="application/ld+json" is:inline>
+  {JSON.stringify(org)}
+</script>
+<script type="application/ld+json" is:inline>
+  {JSON.stringify(site)}
+</script>
+

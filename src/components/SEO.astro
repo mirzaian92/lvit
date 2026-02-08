@@ -1,0 +1,46 @@
+---
+import { SITE } from "@/lib/site";
+
+type Props = {
+  title: string;
+  description: string;
+  canonical: string;
+  ogImage?: string;
+  noindex?: boolean;
+  jsonLd?: unknown[];
+};
+
+const { title, description, canonical, ogImage, noindex, jsonLd } = Astro.props as Props;
+const og = ogImage || SITE.defaultOgImagePath;
+const fullTitle = `${title} | ${SITE.name}`;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light" />
+<meta name="theme-color" content={SITE.primaryColor} />
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={new URL(og, SITE.url).toString()} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={new URL(og, SITE.url).toString()} />
+
+{Array.isArray(jsonLd) &&
+  jsonLd.map((obj) => (
+    <script type="application/ld+json" is:inline>
+      {JSON.stringify(obj)}
+    </script>
+  ))}
+

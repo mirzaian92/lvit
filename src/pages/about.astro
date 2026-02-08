@@ -1,0 +1,100 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import TrustSignals from "@/components/TrustSignals.astro";
+import { SITE } from "@/lib/site";
+import { breadcrumbListSchema } from "@/lib/schema";
+
+const canonical = new URL(Astro.url.pathname, SITE.url).toString();
+const jsonLd = [
+  breadcrumbListSchema([
+    { name: "Home", item: new URL("/", SITE.url).toString() },
+    { name: "About", item: canonical },
+  ]),
+];
+---
+
+<BaseLayout
+  title="About Our Las Vegas MSP"
+  description="Silver State IT provides managed IT services and cybersecurity support for Las Vegas-area businesses, focused on clear ownership, practical controls, and documentation."
+  canonical={canonical}
+  jsonLd={jsonLd}
+>
+  <div class="space-y-10">
+    <section class="rounded-2xl border border-brand-border bg-white p-10 shadow-soft">
+      <h1 class="text-4xl font-semibold tracking-tight text-brand-primary sm:text-5xl">About</h1>
+      <p class="mt-4 max-w-3xl text-base leading-relaxed text-brand-text/85">
+        We built this MSP around a simple goal: make business IT predictable. That means standards,
+        documented decisions, and support that is easy to engage during normal work and after hours.
+      </p>
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a
+          class="focus-ring rounded-full bg-brand-primary px-6 py-3 text-sm font-semibold text-white hover:brightness-95"
+          href="/contact#lead-form"
+        >
+          Book a call
+        </a>
+        <a
+          class="focus-ring rounded-full border border-brand-border px-6 py-3 text-sm font-semibold text-brand-primary hover:bg-brand-primary hover:text-white"
+          href="/service"
+        >
+          Explore services
+        </a>
+      </div>
+    </section>
+
+    <TrustSignals />
+
+    <section class="rounded-2xl border border-brand-border bg-white p-8">
+      <h2 class="text-2xl font-semibold text-brand-primary">How we work</h2>
+      <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        <div class="rounded-2xl border border-brand-border p-6">
+          <p class="font-semibold text-brand-primary">1) Baseline and ownership</p>
+          <p class="mt-2 text-sm text-brand-text/80">
+            We inventory endpoints, identity, networks, and cloud services. Then we agree on who owns
+            what, including where your internal team stays hands-on.
+          </p>
+        </div>
+        <div class="rounded-2xl border border-brand-border p-6">
+          <p class="font-semibold text-brand-primary">2) Reduce the obvious risk</p>
+          <p class="mt-2 text-sm text-brand-text/80">
+            We focus first on controls that consistently prevent incidents: MFA, patching, backups,
+            least privilege, and monitored changes.
+          </p>
+        </div>
+        <div class="rounded-2xl border border-brand-border p-6">
+          <p class="font-semibold text-brand-primary">3) Support with clear standards</p>
+          <p class="mt-2 text-sm text-brand-text/80">
+            Help desk is faster when there is a standard build, standard apps, and a standard way to
+            request access. We keep those standards documented and enforceable.
+          </p>
+        </div>
+        <div class="rounded-2xl border border-brand-border p-6">
+          <p class="font-semibold text-brand-primary">4) Continuous improvement</p>
+          <p class="mt-2 text-sm text-brand-text/80">
+            Monthly reviews look at ticket patterns, repeated problems, security events, and upcoming
+            business changes that affect IT.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="rounded-2xl border border-brand-border bg-white p-8">
+      <h2 class="text-2xl font-semibold text-brand-primary">Las Vegas-first considerations</h2>
+      <ul class="mt-4 grid gap-3 sm:grid-cols-2">
+        <li class="rounded-xl border border-brand-border p-4 text-sm text-brand-text/80">
+          After-hours access and onsite timing matter for hospitality, healthcare, and multi-tenant buildings.
+        </li>
+        <li class="rounded-xl border border-brand-border p-4 text-sm text-brand-text/80">
+          Seasonal staffing changes increase account hygiene needs and help desk volume.
+        </li>
+        <li class="rounded-xl border border-brand-border p-4 text-sm text-brand-text/80">
+          Many environments have a mix of legacy line-of-business apps and modern cloud services.
+        </li>
+        <li class="rounded-xl border border-brand-border p-4 text-sm text-brand-text/80">
+          Remote teams still need consistent device standards and secure access back into core systems.
+        </li>
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
+

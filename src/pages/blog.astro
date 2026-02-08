@@ -1,0 +1,46 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { SITE } from "@/lib/site";
+import { breadcrumbListSchema } from "@/lib/schema";
+
+const canonical = new URL(Astro.url.pathname, SITE.url).toString();
+const jsonLd = [
+  breadcrumbListSchema([
+    { name: "Home", item: new URL("/", SITE.url).toString() },
+    { name: "Blog", item: canonical },
+  ]),
+];
+---
+
+<BaseLayout
+  title="IT Insights for Las Vegas Businesses"
+  description="This page is reserved for future IT and security guidance for Las Vegas-area organizations. No articles are published yet."
+  canonical={canonical}
+  jsonLd={jsonLd}
+>
+  <section class="rounded-2xl border border-brand-border bg-white p-10 shadow-soft">
+    <h1 class="text-3xl font-semibold tracking-tight text-brand-primary">Blog (coming soon)</h1>
+    <p class="mt-4 max-w-2xl text-base text-brand-text/85">
+      We plan to publish practical guidance on managed IT, cybersecurity, Microsoft 365, and operational
+      standards for organizations across Las Vegas and nearby communities.
+    </p>
+    <p class="mt-4 max-w-2xl text-sm text-brand-text/80">
+      For now, use the service, industry, and location hubs to find the most relevant details.
+    </p>
+    <div class="mt-7 flex flex-wrap gap-3">
+      <a
+        class="focus-ring rounded-full bg-brand-primary px-6 py-3 text-sm font-semibold text-white hover:brightness-95"
+        href="/service"
+      >
+        Explore services
+      </a>
+      <a
+        class="focus-ring rounded-full border border-brand-border px-6 py-3 text-sm font-semibold text-brand-primary hover:bg-brand-primary hover:text-white"
+        href="/contact#lead-form"
+      >
+        Book a call
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
