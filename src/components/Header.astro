@@ -1,8 +1,83 @@
 ---
 import { SITE } from "@/lib/site";
+import NavDropdown from "@/components/NavDropdown.astro";
+
+const services = [
+  { label: "Managed IT Services", href: "/service/managed-it-services" },
+  { label: "Cybersecurity", href: "/service/cybersecurity" },
+  { label: "Managed Cybersecurity Services", href: "/service/managed-cybersecurity-services" },
+  { label: "Cybersecurity Insurance", href: "/service/cybersecurity-insurance" },
+  { label: "Help Desk Services", href: "/service/help-desk-services" },
+  { label: "Microsoft", href: "/service/microsoft" },
+  { label: "Microsoft Office 365", href: "/service/microsoft-office-365" },
+  { label: "Microsoft Windows 365", href: "/service/microsoft-windows-365" },
+  { label: "Microsoft Azure", href: "/service/microsoft-azure" },
+  { label: "Microsoft 365", href: "/service/microsoft-365" },
+  { label: "Co-Managed IT Services", href: "/service/co-managed-it-services" },
+  { label: "Backup and Disaster Recovery Services", href: "/service/backup-and-disaster-recovery-services" },
+  { label: "Email Migration", href: "/service/email-migration" },
+  { label: "VoIP Services Providers", href: "/service/voip-services-providers" },
+  { label: "Cloud Services", href: "/service/cloud-services" },
+  { label: "Managed Cloud Services", href: "/service/managed-cloud-services" },
+  { label: "Cloud Migration", href: "/service/cloud-migration" },
+  { label: "IT Disposition & Recycling", href: "/service/it-disposition-and-recycling" },
+  { label: "Hardware as a Service", href: "/service/hardware-as-a-service" },
+  { label: "AI Managed Services", href: "/service/ai-managed-services" },
+  { label: "AI Managed Service Provider", href: "/service/ai-managed-service-provider" },
+];
+
+const industries = [
+  { label: "Law Firms", href: "/industry/law-firms" },
+  { label: "Construction", href: "/industry/construction" },
+  { label: "Engineering", href: "/industry/engineering" },
+  { label: "Architects", href: "/industry/architects" },
+  { label: "Manufacturing", href: "/industry/manufacturing" },
+  { label: "Real Estate", href: "/industry/real-estate" },
+  { label: "Professional Services", href: "/industry/professional-services" },
+  { label: "Healthcare", href: "/industry/healthcare" },
+  { label: "Nonprofits", href: "/industry/nonprofits" },
+  { label: "Insurance", href: "/industry/insurance" },
+  { label: "CPA and Accountant", href: "/industry/cpa-and-accountant" },
+  { label: "Marketing", href: "/industry/marketing" },
+  { label: "Business Services", href: "/industry/business-services" },
+  { label: "Printing Services", href: "/industry/printing-services" },
+  { label: "Hospitality", href: "/industry/hospitality" },
+  { label: "Gaming", href: "/industry/gaming" },
+  { label: "Casino", href: "/industry/casino" },
+  { label: "Hotels", href: "/industry/hotels" },
+  { label: "Medical", href: "/industry/medical" },
+  { label: "Hospitals", href: "/industry/hospitals" },
+  { label: "Medical Spas", href: "/industry/medical-spas" },
+  { label: "Logistics", href: "/industry/logistics" },
+  { label: "Startups", href: "/industry/startups" },
+  { label: "Small and Mid-Sized Businesses", href: "/industry/small-and-mid-sized-businesses" },
+];
+
+const locations = [
+  { label: "Las Vegas", href: "/location/las-vegas-it-services" },
+  { label: "Primm", href: "/location/primm-it-services" },
+  { label: "Lake Las Vegas", href: "/location/lake-las-vegas-it-services" },
+  { label: "Pahrump", href: "/location/pahrump-it-services" },
+  { label: "Enterprise", href: "/location/enterprise-it-services" },
+  { label: "Moapa Valley", href: "/location/moapa-valley-it-services" },
+  { label: "Boulder City", href: "/location/boulder-city-it-services" },
+  { label: "Whitney", href: "/location/whitney-it-services" },
+  { label: "North Las Vegas", href: "/location/north-las-vegas-it-services" },
+  { label: "Searchlight", href: "/location/searchlight-it-services" },
+  { label: "Summerlin", href: "/location/summerlin-it-services" },
+  { label: "Paradise", href: "/location/paradise-it-services" },
+  { label: "Laughlin", href: "/location/laughlin-it-services" },
+  { label: "Winchester", href: "/location/winchester-it-services" },
+  { label: "Sunrise Manor", href: "/location/sunrise-manor-it-services" },
+  { label: "Henderson", href: "/location/henderson-it-services" },
+  { label: "Mesquite", href: "/location/mesquite-it-services" },
+  { label: "Centennial Hills", href: "/location/centennial-hills-it-services" },
+  { label: "Lone Mountain", href: "/location/lone-mountain-it-services" },
+  { label: "Spring Valley", href: "/location/spring-valley-it-services" },
+];
 ---
 
-<header class="sticky top-0 z-40 border-b border-brand-border bg-white/90 backdrop-blur">
+<header class="sticky top-0 z-40 border-b border-brand-border bg-white">
   <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
     <a href="/" class="focus-ring flex items-center gap-2 rounded-md">
       <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-brand-primary">
@@ -10,24 +85,28 @@ import { SITE } from "@/lib/site";
       </span>
       <span class="font-semibold text-brand-primary">{SITE.name}</span>
     </a>
-    <nav aria-label="Primary" class="hidden items-center gap-6 md:flex">
-      <a class="focus-ring rounded-sm text-sm hover:text-brand-primary" href="/service">Services</a>
-      <a class="focus-ring rounded-sm text-sm hover:text-brand-primary" href="/industry">Industries</a>
-      <a class="focus-ring rounded-sm text-sm hover:text-brand-primary" href="/location">Locations</a>
-      <a class="focus-ring rounded-sm text-sm hover:text-brand-primary" href="/about">About</a>
-      <a
-        class="focus-ring rounded-full bg-brand-primary px-4 py-2 text-sm font-semibold text-white hover:brightness-95"
-        href="/contact"
-      >
+    <nav aria-label="Primary" class="hidden items-center gap-2 md:flex">
+      <a class="focus-ring rounded-sm px-2 py-1 text-sm font-medium hover:text-brand-primary" href="/about">
+        About
+      </a>
+      <NavDropdown label="Services" panelTitle="Services" items={services} />
+      <NavDropdown label="Industries" panelTitle="Industries" items={industries} />
+      <NavDropdown label="Locations" panelTitle="Locations" items={locations} maxHeightClass="max-h-[60vh]" />
+      <a class="focus-ring rounded-sm px-2 py-1 text-sm font-medium hover:text-brand-primary" href="/contact">
         Contact
+      </a>
+      <a
+        class="focus-ring ml-1 inline-flex items-center justify-center rounded-full bg-brand-accent px-5 py-2.5 text-sm font-semibold text-brand-primary hover:brightness-95"
+        href="/contact#lead-form"
+      >
+        Book a Call
       </a>
     </nav>
     <a
-      class="focus-ring rounded-full border border-brand-border px-4 py-2 text-sm font-semibold text-brand-primary hover:bg-brand-primary hover:text-white md:hidden"
-      href="/contact"
+      class="focus-ring inline-flex items-center justify-center rounded-full bg-brand-accent px-5 py-2.5 text-sm font-semibold text-brand-primary hover:brightness-95 md:hidden"
+      href="/contact#lead-form"
     >
-      Contact
+      Book a Call
     </a>
   </div>
 </header>
-
